@@ -29,11 +29,6 @@ variable "token" {
   description = "The personal access token used to access the repository"
 }
 
-variable "gitops_content" {
-  type        = string
-  description = "A description of my variable"
-}
-
 variable "public" {
   type        = bool
   description = "Flag indicating that the repo should be public or private"
