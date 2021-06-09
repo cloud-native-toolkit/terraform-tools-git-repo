@@ -26,6 +26,7 @@ cd .tmprepo || exit 1
 echo "# ${REPO}" > README.md
 git add README.md
 git commit -m "Initial commit"
+git branch -m $(git rev-parse --abbrev-ref HEAD) main
 git push
 
 cd ..
