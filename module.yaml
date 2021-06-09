@@ -1,6 +1,6 @@
-name: terraform-tools-gitops
+name: tools-git-repo
 type: terraform
-description: Module to create a gitops repo
+description: Module to create a git repo
 tags:
     - tools
     - gitops
