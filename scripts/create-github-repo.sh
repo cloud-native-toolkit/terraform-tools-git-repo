@@ -5,6 +5,8 @@ set -e
 SCRIPT_DIR=$(cd $(dirname $0); pwd -P)
 BIN_DIR=$(cd "${SCRIPT_DIR}/../bin"; pwd -P)
 
+GH=$(command -v gh || command -v "${BIN_DIR}/gh")
+
 HOSTNAME="$1"
 ORG="$2"
 REPO="$3"
@@ -27,4 +29,4 @@ if [[ "${PUBLIC}" == "true" ]]; then
   PUBLIC_PRIVATE="--public"
 fi
 
-gh repo create "${ORG}/${REPO}" ${PUBLIC_PRIVATE}
+"${GH}" repo create "${ORG}/${REPO}" ${PUBLIC_PRIVATE}

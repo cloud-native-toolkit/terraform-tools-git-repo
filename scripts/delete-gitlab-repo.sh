@@ -5,6 +5,8 @@ set -e
 SCRIPT_DIR=$(cd $(dirname $0); pwd -P)
 BIN_DIR=$(cd "${SCRIPT_DIR}/../bin"; pwd -P)
 
+GLAB=$(command -v glab || command -v "${BIN_DIR}/glab")
+
 HOSTNAME="$1"
 ORG="$2"
 REPO="$3"
@@ -19,6 +21,6 @@ if [[ -z "${TOKEN}" ]]; then
   exit 1
 fi
 
-glab auth login --hostname "${HOSTNAME}" --token "${TOKEN}"
+"${GLAB}" auth login --hostname "${HOSTNAME}" --token "${TOKEN}"
 
-glab repo delete "${ORG}/${REPO}"
+"${GLAB}" repo delete "${ORG}/${REPO}"

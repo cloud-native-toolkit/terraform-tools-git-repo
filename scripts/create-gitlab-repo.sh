@@ -2,8 +2,10 @@
 
 set -e
 
-SCRIPT_DIR=$(cd $(dirname $0); pwd -P)
+SCRIPT_DIR=$(cd $(dirname "$0"); pwd -P)
 BIN_DIR=$(cd "${SCRIPT_DIR}/../bin"; pwd -P)
+
+GLAB=$(command -v glab || command -v "${BIN_DIR}/glab")
 
 HOSTNAME="$1"
 ORG="$2"
@@ -20,11 +22,11 @@ if [[ -z "${TOKEN}" ]]; then
   exit 1
 fi
 
-glab auth login --hostname "${HOSTNAME}" --token "${TOKEN}"
+"${GLAB}" auth login --hostname "${HOSTNAME}" --token "${TOKEN}"
 
 PUBLIC_PRIVATE="--private"
 if [[ "${PUBLIC}" == "true" ]]; then
   PUBLIC_PRIVATE="--public"
 fi
 
-glab repo create "${ORG}/${REPO}" ${PUBLIC_PRIVATE}
+"${GLAB}" repo create "${ORG}/${REPO}" ${PUBLIC_PRIVATE}

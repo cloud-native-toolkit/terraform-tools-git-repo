@@ -5,6 +5,8 @@ set -e
 SCRIPT_DIR=$(cd $(dirname $0); pwd -P)
 BIN_DIR=$(cd "${SCRIPT_DIR}/../bin"; pwd -P)
 
+GH=$(command -v gh || command -v "${BIN_DIR}/gh")
+
 HOSTNAME="$1"
 ORG="$2"
 REPO="$3"
@@ -21,5 +23,5 @@ fi
 
 echo "${TOKEN}" | gh auth login --hostname "${HOSTNAME}" --with-token
 
-gh alias set repo-delete 'api -X DELETE "repos/$1"'
-gh repo-delete "${ORG}/${REPO}"
+"${GH}" alias set repo-delete 'api -X DELETE "repos/$1"'
+"${GH}" repo-delete "${ORG}/${REPO}"
