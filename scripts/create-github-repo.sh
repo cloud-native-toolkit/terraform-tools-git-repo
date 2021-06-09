@@ -31,4 +31,4 @@ if [[ "${PUBLIC}" == "true" ]]; then
   PUBLIC_PRIVATE="--public"
 fi
 
-"${GH}" repo create "${ORG}/${REPO}" ${PUBLIC_PRIVATE}
+"${GH}" repo create -y "${ORG}/${REPO}" ${PUBLIC_PRIVATE}
