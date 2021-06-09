@@ -1,11 +1,21 @@
-id: github.com/cloud-native-toolkit/terraform-tools-gitops
-name: ""
+id: github.com/cloud-native-toolkit/terraform-tools-git-repo
+name: tools-git-repo
 type: terraform
-description: ""
+description: Module to create a git repo
 tags:
   - tools
-  - devops
+  - gitops
+  - repo
 versions:
+  - platforms: []
+    dependencies: []
+    variables: [{name: host, type: string, description: The host for the git repository.}, {name: type, type: string, description: The type of the hosted git repository (github or gitlab).}, {name: org, type: string, description: The org/group where the git repository exists/will be provisioned.}, {name: repo, type: string, description: "variable \"repo\" {\n  type        = string\n  description = \"A description of my"}, {name: 'variable"~}~~', type: string}, {name: provision, type: bool, description: "variable \"provision\" {\n  type        = bool\n  description = \"A description of my"}, {name: 'variable"~  default     = true~}~~', type: string, default: "true", optional: true}, {name: token, type: string, description: The personal access token used to access the repository}, {name: public, type: bool, description: Flag indicating that the repo should be public or private, default: false, optional: true}]
+    version: v1.0.0
+    outputs:
+      - name: repo
+        description: The gitops repo
+      - name: token
+        description: The token used to authenticate to the gitops repo
   - platforms:
       - kubernetes
       - ocp3
@@ -27,28 +37,3 @@ versions:
     #          version: ">= 1.6.0"
     variables: []
     version: v0.0.0
-#    - name: cluster_type
-#      moduleRef:
-#        id: cluster
-#        output: type_code
-#    - name: cluster_ingress_hostname
-#      moduleRef:
-#        id: cluster
-#        output: ingress_hostname
-#    - name: cluster_config_file
-#      moduleRef:
-#        id: cluster
-#        output: config_file_path
-#    - name: tls_secret_name
-#      moduleRef:
-#        id: cluster
-#        output: tls_secret_name
-#    - name: releases_namespace
-#      moduleRef:
-#        id: namespace
-#        output: name
-#        discriminator: tools
-#    - name: icon_url
-#      moduleRef:
-#        id: dashboard
-#        output: base_icon_url
