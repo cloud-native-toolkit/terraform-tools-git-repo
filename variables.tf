@@ -32,5 +32,5 @@ variable "token" {
 variable "public" {
   type        = bool
   description = "Flag indicating that the repo should be public or private"
-  default     = true
+  default     = false
 }
