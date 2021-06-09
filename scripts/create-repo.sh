@@ -20,15 +20,10 @@ if [[ -z "${TOKEN}" ]]; then
   exit 1
 fi
 
-if [[ -z "${USER}" ]]; then
-  echo "USER environment variable must be set"
-  exit 1
-fi
-
 if [[ "${TYPE}" == "github" ]]; then
-  TOKEN="${TOKEN}" USER="${USER}" "${SCRIPT_DIR}/create-github-repo.sh" "${HOSTNAME}" "${ORG}" "${REPO}" "${PUBLIC}"
+  TOKEN="${TOKEN}" "${SCRIPT_DIR}/create-github-repo.sh" "${HOSTNAME}" "${ORG}" "${REPO}" "${PUBLIC}"
 elif [[ "${TYPE}" == "gitlab" ]]; then
-  TOKEN="${TOKEN}" USER="${USER}" "${SCRIPT_DIR}/create-gitlab-repo.sh" "${HOSTNAME}" "${ORG}" "${REPO}" "${PUBLIC}"
+  TOKEN="${TOKEN}" "${SCRIPT_DIR}/create-gitlab-repo.sh" "${HOSTNAME}" "${ORG}" "${REPO}" "${PUBLIC}"
 else
   echo "Unsupported repo type: $TYPE"
   exit 1
