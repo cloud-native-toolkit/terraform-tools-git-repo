@@ -3,3 +3,10 @@ output "repo" {
   value       = "${var.host}/${var.org}/${var.repo}"
   depends_on  = [null_resource.create_github_repo, null_resource.create_gitlab_repo]
 }
+
+output "token" {
+  description = "The token used to authenticate to the gitops repo"
+  value       = var.token
+  depends_on  = [null_resource.create_github_repo, null_resource.create_gitlab_repo]
+  sensitive   = true
+}
