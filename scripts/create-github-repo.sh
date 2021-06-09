@@ -32,14 +32,3 @@ if [[ "${PUBLIC}" == "true" ]]; then
 fi
 
 "${GH}" repo create -y "${ORG}/${REPO}" ${PUBLIC_PRIVATE}
-
-mkdir -p .tmprepo
-
-git clone "https://${TOKEN}@${HOSTNAME}/${ORG}/${REPO}" .tmprepo
-
-cd .tmprepo
-
-echo "# ${REPO}" > README.md
-git add README.md
-git commit -m "Initial commit"
-git push

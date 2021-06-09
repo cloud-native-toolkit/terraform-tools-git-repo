@@ -27,3 +27,15 @@ resource null_resource create_repo {
     }
   }
 }
+
+resource null_resource initialize_repo {
+  depends_on = [null_resource.create_repo]
+
+  provisioner "local-exec" {
+    command = "${path.module}/scripts/initialize-repo.sh '${var.host}' '${var.org}' '${var.repo}'"
+
+    environment = {
+      TOKEN = var.token
+    }
+  }
+}

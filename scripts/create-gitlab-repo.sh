@@ -31,4 +31,4 @@ if [[ "${PUBLIC}" == "true" ]]; then
   PUBLIC_PRIVATE="--public"
 fi
 
-"${GLAB}" repo create "${ORG}/${REPO}" ${PUBLIC_PRIVATE} --readme
+"${GLAB}" repo create "${ORG}/${REPO}" ${PUBLIC_PRIVATE}
