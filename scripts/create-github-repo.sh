@@ -24,7 +24,7 @@ if [[ -z "${TOKEN}" ]]; then
   exit 1
 fi
 
-echo "${TOKEN}" | gh auth login --hostname "${HOSTNAME}" --with-token
+echo "${TOKEN}" | "${GH}" auth login --hostname "${HOSTNAME}" --with-token
 
 PUBLIC_PRIVATE="--private"
 if [[ "${PUBLIC}" == "true" ]]; then

@@ -21,7 +21,7 @@ if [[ -z "${TOKEN}" ]]; then
   exit 1
 fi
 
-echo "${TOKEN}" | gh auth login --hostname "${HOSTNAME}" --with-token
+echo "${TOKEN}" | "${GH}" auth login --hostname "${HOSTNAME}" --with-token
 
 "${GH}" alias set repo-delete 'api -X DELETE "repos/$1"'
 "${GH}" repo-delete "${ORG}/${REPO}"
