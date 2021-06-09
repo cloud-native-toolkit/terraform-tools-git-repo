@@ -5,5 +5,5 @@ module "gitrepo" {
   type = "github"
   org  = "seansund"
   repo = "git-module-test"
-  token = var.gittoken
+  token = var.git_token
 }
