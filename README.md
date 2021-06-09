@@ -11,6 +11,7 @@ The module depends on the following software components:
 - terraform - v13
 - gh - GitHub cli (provided)
 - glab - Gitlab cli (provided)
+- git - Git cli
 
 ### Terraform providers
 
