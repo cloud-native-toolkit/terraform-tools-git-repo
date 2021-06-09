@@ -7,6 +7,8 @@ BIN_DIR=$(cd "${SCRIPT_DIR}/../bin"; pwd -P)
 
 GLAB=$(command -v glab || command -v "${BIN_DIR}/glab")
 
+echo "GLAB cli - ${GLAB}"
+
 HOSTNAME="$1"
 ORG="$2"
 REPO="$3"

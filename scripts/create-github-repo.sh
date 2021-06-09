@@ -7,6 +7,8 @@ BIN_DIR=$(cd "${SCRIPT_DIR}/../bin"; pwd -P)
 
 GH=$(command -v gh || command -v "${BIN_DIR}/gh")
 
+echo "GH cli - ${GH}"
+
 HOSTNAME="$1"
 ORG="$2"
 REPO="$3"
