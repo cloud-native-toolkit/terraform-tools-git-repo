@@ -22,6 +22,6 @@ if [[ -z "${TOKEN}" ]]; then
 fi
 
 echo "${TOKEN}" | "${GH}" auth login --hostname "${HOSTNAME}" --with-token
-"${GH}" auth refresh -s delete_repo
+"${GH}" auth refresh --hostname "${HOSTNAME}" -s delete_repo
 
 "${GH}" api -X DELETE "repos/${ORG}/${REPO}"
