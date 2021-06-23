@@ -10,6 +10,17 @@ versions:
   - platforms: []
     dependencies: []
     variables: [{name: host, type: string, description: The host for the git repository.}, {name: type, type: string, description: The type of the hosted git repository (github or gitlab).}, {name: org, type: string, description: The org/group where the git repository exists/will be provisioned.}, {name: repo, type: string, description: "variable \"repo\" {\n  type        = string\n  description = \"A description of my"}, {name: 'variable"~}~~', type: string}, {name: provision, type: bool, description: "variable \"provision\" {\n  type        = bool\n  description = \"A description of my"}, {name: 'variable"~  default     = true~}~~', type: string, default: "true", optional: true}, {name: token, type: string, description: The personal access token used to access the repository}, {name: public, type: bool, description: Flag indicating that the repo should be public or private, default: false, optional: true}]
+    version: v1.2.1
+    outputs:
+      - name: repo
+        description: The gitops repo
+      - name: url
+        description: The gitops repo url
+      - name: token
+        description: The token used to authenticate to the gitops repo
+  - platforms: []
+    dependencies: []
+    variables: [{name: host, type: string, description: The host for the git repository.}, {name: type, type: string, description: The type of the hosted git repository (github or gitlab).}, {name: org, type: string, description: The org/group where the git repository exists/will be provisioned.}, {name: repo, type: string, description: "variable \"repo\" {\n  type        = string\n  description = \"A description of my"}, {name: 'variable"~}~~', type: string}, {name: provision, type: bool, description: "variable \"provision\" {\n  type        = bool\n  description = \"A description of my"}, {name: 'variable"~  default     = true~}~~', type: string, default: "true", optional: true}, {name: token, type: string, description: The personal access token used to access the repository}, {name: public, type: bool, description: Flag indicating that the repo should be public or private, default: false, optional: true}]
     version: v1.2.0
     outputs:
       - name: repo
