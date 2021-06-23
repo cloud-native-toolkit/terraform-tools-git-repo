@@ -1,5 +1,11 @@
 output "repo" {
   description = "The gitops repo"
+  value       = "${var.host}/${var.org}/${var.repo}"
+  depends_on  = [null_resource.initialize_repo]
+}
+
+output "url" {
+  description = "The gitops repo url"
   value       = "https://${var.host}/${var.org}/${var.repo}"
   depends_on  = [null_resource.initialize_repo]
 }
