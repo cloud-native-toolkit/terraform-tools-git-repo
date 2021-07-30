@@ -1,12 +1,18 @@
 output "repo" {
-  description = "The gitops repo"
+  description = "The git repo"
   value       = "${var.host}/${var.org}/${var.repo}"
   depends_on  = [null_resource.initialize_repo]
 }
 
 output "url" {
-  description = "The gitops repo url"
+  description = "The git repo url"
   value       = "https://${var.host}/${var.org}/${var.repo}"
+  depends_on  = [null_resource.initialize_repo]
+}
+
+output "branch" {
+  description = "The git repo branch"
+  value       = local.branch
   depends_on  = [null_resource.initialize_repo]
 }
 
