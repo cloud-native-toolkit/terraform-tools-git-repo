@@ -1,4 +1,8 @@
 
+locals {
+  branch = var.branch != null && var.branch != "" ? var.branch : "main"
+}
+
 resource null_resource create_repo {
   count = var.provision ? 1 : 0
 
@@ -33,7 +37,7 @@ resource null_resource initialize_repo {
   depends_on = [null_resource.create_repo]
 
   provisioner "local-exec" {
-    command = "${path.module}/scripts/initialize-repo.sh '${var.host}' '${var.org}' '${var.repo}'"
+    command = "${path.module}/scripts/initialize-repo.sh '${var.host}' '${var.org}' '${var.repo}' '${local.branch}'"
 
     environment = {
       TOKEN = var.token
