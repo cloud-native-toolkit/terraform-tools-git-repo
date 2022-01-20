@@ -3,7 +3,7 @@ module "gitrepo" {
 
   host = "github.com"
   type = "github"
-  org  = "seansund"
-  repo = "git-module-test"
+  org  = var.git_org
+  repo = var.git_repo
   token = var.git_token
 }
