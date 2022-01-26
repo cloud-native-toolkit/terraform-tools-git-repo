@@ -19,8 +19,8 @@ if [[ -z "${TOKEN}" ]]; then
   exit 1
 fi
 
-echo "Sleeping for 5 minutes before deleting repo to allow things to settle"
-sleep 300
+echo "Sleeping for 1 minute before deleting repo to allow things to settle"
+sleep 60
 
 if [[ "${TYPE}" == "github" ]]; then
   TOKEN="${TOKEN}" USER="${USER}" "${SCRIPT_DIR}/delete-github-repo.sh" "${HOSTNAME}" "${ORG}" "${REPO}"
