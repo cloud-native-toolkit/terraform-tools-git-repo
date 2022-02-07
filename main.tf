@@ -35,7 +35,7 @@ resource null_resource create_repo {
     command = "${path.module}/scripts/delete-repo.sh '${self.triggers.TYPE}' '${self.triggers.HOST}' '${self.triggers.ORG}' '${self.triggers.REPO}'"
 
     environment = {
-      TOKEN = self.triggers.TOKEN
+      TOKEN = nonsensitive(self.triggers.TOKEN)
       BIN_DIR = self.triggers.BIN_DIR
     }
   }
