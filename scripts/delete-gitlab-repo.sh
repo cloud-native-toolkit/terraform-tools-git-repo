@@ -3,7 +3,6 @@
 set -e
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd -P)
-BIN_DIR=$(cd "${SCRIPT_DIR}/../bin"; pwd -P)
 
 GLAB=$(command -v glab || command -v "${BIN_DIR}/glab")
 

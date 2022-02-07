@@ -3,7 +3,6 @@
 set -e
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd -P)
-BIN_DIR=$(cd "${SCRIPT_DIR}/../bin"; pwd -P)
 
 GH=$(command -v gh || command -v "${BIN_DIR}/gh")
 
