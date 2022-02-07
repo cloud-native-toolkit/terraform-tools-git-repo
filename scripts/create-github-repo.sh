@@ -2,7 +2,7 @@
 
 set -e
 
-SCRIPT_DIR=$(cd $(dirname $0); pwd -P)
+SCRIPT_DIR=$(cd $(dirname "$0"); pwd -P)
 
 GH=$(command -v gh || command -v "${BIN_DIR}/gh")
 
@@ -23,11 +23,12 @@ if [[ -z "${TOKEN}" ]]; then
   exit 1
 fi
 
-echo "${TOKEN}" | "${GH}" auth login --hostname "${HOSTNAME}" --with-token
+export GITHUB_TOKEN="${TOKEN}"
 
 PUBLIC_PRIVATE="--private"
 if [[ "${PUBLIC}" == "true" ]]; then
   PUBLIC_PRIVATE="--public"
 fi
 
+echo "Creating repo: ${ORG}/${REPO} ${PUBLIC_PRIVATE}"
 "${GH}" repo create -y "${ORG}/${REPO}" ${PUBLIC_PRIVATE}
