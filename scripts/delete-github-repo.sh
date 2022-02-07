@@ -20,6 +20,7 @@ if [[ -z "${TOKEN}" ]]; then
   exit 1
 fi
 
-echo "${TOKEN}" | "${GH}" auth login --hostname "${HOSTNAME}" --with-token
+export GITHUB_TOKEN="${TOKEN}"
 
+echo "Deleting repo: ${ORG}/${REPO}"
 "${GH}" api -X DELETE "repos/${ORG}/${REPO}"
