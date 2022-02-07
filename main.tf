@@ -25,7 +25,7 @@ resource null_resource create_repo {
     command = "${path.module}/scripts/create-repo.sh '${self.triggers.TYPE}' '${self.triggers.HOST}' '${self.triggers.ORG}' '${self.triggers.REPO}' '${var.public}'"
 
     environment = {
-      TOKEN = self.triggers.TOKEN
+      TOKEN = nonsensitive(self.triggers.TOKEN)
       BIN_DIR = self.triggers.BIN_DIR
     }
   }
@@ -49,7 +49,7 @@ resource null_resource initialize_repo {
     command = "${path.module}/scripts/initialize-repo.sh '${var.host}' '${var.org}' '${var.repo}' '${local.branch}'"
 
     environment = {
-      TOKEN = var.token
+      TOKEN = nonsensitive(var.token)
     }
   }
 }
