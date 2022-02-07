@@ -3,6 +3,12 @@ locals {
   branch = var.branch != null && var.branch != "" ? var.branch : "main"
 }
 
+module setup_clis {
+  source = "github.com/cloud-native-toolkit/terraform-util-clis.git"
+
+  clis = ["gh", "glab"]
+}
+
 resource null_resource create_repo {
   count = var.provision ? 1 : 0
 
@@ -12,6 +18,7 @@ resource null_resource create_repo {
     ORG   = var.org
     REPO  = var.repo
     TOKEN = var.token
+    BIN_DIR = module.setup_clis.bin_dir
   }
 
   provisioner "local-exec" {
@@ -19,6 +26,7 @@ resource null_resource create_repo {
 
     environment = {
       TOKEN = self.triggers.TOKEN
+      BIN_DIR = self.triggers.BIN_DIR
     }
   }
 
@@ -28,6 +36,7 @@ resource null_resource create_repo {
 
     environment = {
       TOKEN = self.triggers.TOKEN
+      BIN_DIR = self.triggers.BIN_DIR
     }
   }
 }

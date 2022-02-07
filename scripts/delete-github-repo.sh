@@ -3,7 +3,6 @@
 set -e
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd -P)
-BIN_DIR=$(cd "${SCRIPT_DIR}/../bin"; pwd -P)
 
 GH=$(command -v gh || command -v "${BIN_DIR}/gh")
 
@@ -21,6 +20,6 @@ if [[ -z "${TOKEN}" ]]; then
   exit 1
 fi
 
-echo "${TOKEN}" | "${GH}" auth login --hostname "${HOSTNAME}" --with-token -s delete_repo
+echo "${TOKEN}" | "${GH}" auth login --hostname "${HOSTNAME}" --with-token
 
 "${GH}" api -X DELETE "repos/${ORG}/${REPO}"
