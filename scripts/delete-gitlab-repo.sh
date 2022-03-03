@@ -23,4 +23,14 @@ fi
 
 "${GLAB}" auth login --hostname "${HOSTNAME}" --token "${TOKEN}"
 
-"${GLAB}" repo delete "${ORG}/${REPO}"
+"${GLAB}" repo clone ${ORG}/${REPO} .tmprepo
+
+echo "Checking owner_module value"
+cat .tmprepo/.owner_module
+
+if [[ $(cat .tmprepo/.owner_module) == "${MODULE_ID}" ]]; then
+  echo "Deleting repo: ${ORG}/${REPO}"
+  "${GLAB}" repo delete "${ORG}/${REPO}"
+fi
+
+rm -rf .tmprepo
