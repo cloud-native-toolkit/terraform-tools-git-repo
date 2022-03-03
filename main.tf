@@ -9,6 +9,10 @@ module setup_clis {
   clis = ["gh", "glab"]
 }
 
+resource random_id module_uuid {
+  byte_length = 12
+}
+
 resource null_resource create_repo {
   count = var.provision ? 1 : 0
 
@@ -19,7 +23,7 @@ resource null_resource create_repo {
     REPO  = var.repo
     TOKEN = var.token
     BIN_DIR = module.setup_clis.bin_dir
-    MODULE_ID = path.module
+    MODULE_ID = random_id.module_uuid
   }
 
   provisioner "local-exec" {
