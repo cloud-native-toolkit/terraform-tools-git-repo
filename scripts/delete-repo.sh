@@ -8,6 +8,7 @@ TYPE="$1"
 HOSTNAME="$2"
 ORG="$3"
 REPO="$4"
+MODULE_ID="$5"
 
 if [[ -z "${TYPE}" ]] || [[ -z "${HOSTNAME}" ]] || [[ -z "${ORG}" ]] || [[ -z "${REPO}" ]]; then
   echo "Usage: delete-repo.sh TYPE HOSTNAME ORG REPO"
@@ -23,9 +24,9 @@ echo "Sleeping for 1 minute before deleting repo to allow things to settle"
 sleep 60
 
 if [[ "${TYPE}" == "github" ]]; then
-  TOKEN="${TOKEN}" USER="${USER}" "${SCRIPT_DIR}/delete-github-repo.sh" "${HOSTNAME}" "${ORG}" "${REPO}"
+  TOKEN="${TOKEN}" USER="${USER}" "${SCRIPT_DIR}/delete-github-repo.sh" "${HOSTNAME}" "${ORG}" "${REPO}" "${MODULE_ID}"
 elif [[ "${TYPE}" == "gitlab" ]]; then
-  TOKEN="${TOKEN}" USER="${USER}" "${SCRIPT_DIR}/delete-gitlab-repo.sh" "${HOSTNAME}" "${ORG}" "${REPO}"
+  TOKEN="${TOKEN}" USER="${USER}" "${SCRIPT_DIR}/delete-gitlab-repo.sh" "${HOSTNAME}" "${ORG}" "${REPO}" "${MODULE_ID}"
 else
   echo "Unsupported repo type: $TYPE"
   exit 1

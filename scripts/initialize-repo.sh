@@ -4,6 +4,7 @@ HOSTNAME="$1"
 ORG="$2"
 REPO="$3"
 BRANCH="$4"
+MODULE_ID="$5"
 
 if [[ -z "${HOSTNAME}" ]] || [[ -z "${ORG}" ]] || [[ -z "${REPO}" ]]; then
   echo "Usage: initialize-repo.sh HOSTNAME ORG REPO"
@@ -27,6 +28,8 @@ git remote add origin "https://${TOKEN}@${HOSTNAME}/${ORG}/${REPO}"
 
 echo "# ${REPO}" > README.md
 git add README.md
+echo "${MODULE_ID}" > .owner_module
+git add .owner_module
 git commit -m "Initial commit"
 git branch -m "$(git rev-parse --abbrev-ref HEAD)" "${BRANCH}"
 git push -u origin "${BRANCH}"
