@@ -25,6 +25,9 @@ export GITHUB_TOKEN="${TOKEN}"
 
 "${GH}" repo clone ${ORG}/${REPO} .tmprepo
 
+echo "Checking owner_module value"
+cat .tmprepo/.owner_module
+
 if [[ $(cat .tmprepo/.owner_module) == "${MODULE_ID}" ]]; then
   echo "Deleting repo: ${ORG}/${REPO}"
   "${GH}" api -X DELETE "repos/${ORG}/${REPO}"
