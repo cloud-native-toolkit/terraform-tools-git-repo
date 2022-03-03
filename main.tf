@@ -21,7 +21,7 @@ resource null_resource create_repo {
     REPO  = var.repo
     TOKEN = var.token
     BIN_DIR = module.setup_clis.bin_dir
-    MODULE_ID = random_id.module_uuid
+    MODULE_ID = random_id.module_uuid.id
   }
 
   provisioner "local-exec" {
