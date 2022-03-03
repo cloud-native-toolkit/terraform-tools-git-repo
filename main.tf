@@ -19,10 +19,11 @@ resource null_resource create_repo {
     REPO  = var.repo
     TOKEN = var.token
     BIN_DIR = module.setup_clis.bin_dir
+    MODULE_ID = path.module
   }
 
   provisioner "local-exec" {
-    command = "${path.module}/scripts/create-repo.sh '${self.triggers.TYPE}' '${self.triggers.HOST}' '${self.triggers.ORG}' '${self.triggers.REPO}' '${var.public}'"
+    command = "${path.module}/scripts/create-repo.sh '${self.triggers.TYPE}' '${self.triggers.HOST}' '${self.triggers.ORG}' '${self.triggers.REPO}' '${var.public}' '${var.branch}' '${self.triggers.MODULE_ID}'"
 
     environment = {
       TOKEN = nonsensitive(self.triggers.TOKEN)
@@ -32,24 +33,11 @@ resource null_resource create_repo {
 
   provisioner "local-exec" {
     when = destroy
-    command = "${path.module}/scripts/delete-repo.sh '${self.triggers.TYPE}' '${self.triggers.HOST}' '${self.triggers.ORG}' '${self.triggers.REPO}'"
+    command = "${path.module}/scripts/delete-repo.sh '${self.triggers.TYPE}' '${self.triggers.HOST}' '${self.triggers.ORG}' '${self.triggers.REPO}' '${self.triggers.MODULE_ID}'"
 
     environment = {
       TOKEN = nonsensitive(self.triggers.TOKEN)
       BIN_DIR = self.triggers.BIN_DIR
-    }
-  }
-}
-
-resource null_resource initialize_repo {
-  count      = var.provision ? 1 : 0
-  depends_on = [null_resource.create_repo]
-
-  provisioner "local-exec" {
-    command = "${path.module}/scripts/initialize-repo.sh '${var.host}' '${var.org}' '${var.repo}' '${local.branch}'"
-
-    environment = {
-      TOKEN = nonsensitive(var.token)
     }
   }
 }

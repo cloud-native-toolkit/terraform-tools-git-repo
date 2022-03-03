@@ -9,6 +9,7 @@ GLAB=$(command -v glab || command -v "${BIN_DIR}/glab")
 HOSTNAME="$1"
 ORG="$2"
 REPO="$3"
+MODULE_ID="$4"
 
 if [[ -z "${HOSTNAME}" ]] || [[ -z "${ORG}" ]] || [[ -z "${REPO}" ]]; then
   echo "Usage: delete-gitlab-repo.sh HOSTNAME ORG REPO"
