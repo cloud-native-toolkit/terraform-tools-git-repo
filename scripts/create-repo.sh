@@ -11,6 +11,7 @@ REPO="$4"
 PUBLIC="$5"
 BRANCH="${6:-main}"
 MODULE_ID="$7"
+STRICT="$8"
 
 if [[ -z "${TYPE}" ]] || [[ -z "${HOSTNAME}" ]] || [[ -z "${ORG}" ]] || [[ -z "${REPO}" ]]; then
   echo "Usage: create-repo.sh TYPE HOSTNAME ORG REPO [PUBLIC]"
@@ -23,9 +24,9 @@ if [[ -z "${TOKEN}" ]]; then
 fi
 
 if [[ "${TYPE}" == "github" ]]; then
-  TOKEN="${TOKEN}" "${SCRIPT_DIR}/create-github-repo.sh" "${HOSTNAME}" "${ORG}" "${REPO}" "${PUBLIC}" "${BRANCH}" "${MODULE_ID}"
+  TOKEN="${TOKEN}" "${SCRIPT_DIR}/create-github-repo.sh" "${HOSTNAME}" "${ORG}" "${REPO}" "${PUBLIC}" "${BRANCH}" "${MODULE_ID}" "${STRICT}"
 elif [[ "${TYPE}" == "gitlab" ]]; then
-  TOKEN="${TOKEN}" "${SCRIPT_DIR}/create-gitlab-repo.sh" "${HOSTNAME}" "${ORG}" "${REPO}" "${PUBLIC}" "${BRANCH}" "${MODULE_ID}"
+  TOKEN="${TOKEN}" "${SCRIPT_DIR}/create-gitlab-repo.sh" "${HOSTNAME}" "${ORG}" "${REPO}" "${PUBLIC}" "${BRANCH}" "${MODULE_ID}" "${STRICT}"
 else
   echo "Unsupported repo type: $TYPE"
   exit 1

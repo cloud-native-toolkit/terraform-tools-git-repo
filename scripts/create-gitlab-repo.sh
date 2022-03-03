@@ -14,6 +14,7 @@ REPO="$3"
 PUBLIC="$4"
 BRANCH="${5:-main}"
 MODULE_ID="$6"
+STRICT="$7"
 
 if [[ -z "${HOSTNAME}" ]] || [[ -z "${ORG}" ]] || [[ -z "${REPO}" ]]; then
   echo "Usage: create-gitlab-repo.sh HOSTNAME ORG REPO"
@@ -34,7 +35,12 @@ fi
 
 if "${GH}" repo view ${ORG}/${REPO} --json url 1> /dev/null 2> /dev/null; then
   echo "Repo already exists"
-  exit 0
+
+  if [[ "${STRICT}" == "true" ]]; then
+    exit 1
+  else
+    exit 0
+  fi
 else
   echo "Creating repo: ${ORG}/${REPO} ${PUBLIC_PRIVATE}"
   "${GLAB}" repo create "${ORG}/${REPO}" ${PUBLIC_PRIVATE}

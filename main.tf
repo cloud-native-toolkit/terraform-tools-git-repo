@@ -14,8 +14,6 @@ resource random_id module_uuid {
 }
 
 resource null_resource create_repo {
-  count = var.provision ? 1 : 0
-
   triggers = {
     TYPE  = var.type
     HOST  = var.host
@@ -27,7 +25,7 @@ resource null_resource create_repo {
   }
 
   provisioner "local-exec" {
-    command = "${path.module}/scripts/create-repo.sh '${self.triggers.TYPE}' '${self.triggers.HOST}' '${self.triggers.ORG}' '${self.triggers.REPO}' '${var.public}' '${var.branch}' '${self.triggers.MODULE_ID}'"
+    command = "${path.module}/scripts/create-repo.sh '${self.triggers.TYPE}' '${self.triggers.HOST}' '${self.triggers.ORG}' '${self.triggers.REPO}' '${var.public}' '${var.branch}' '${self.triggers.MODULE_ID}' '${var.strict}'"
 
     environment = {
       TOKEN = nonsensitive(self.triggers.TOKEN)

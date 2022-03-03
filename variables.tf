@@ -24,12 +24,6 @@ variable "branch" {
   default     = "main"
 }
 
-variable "provision" {
-  type        = bool
-  description = "A description of my variable"
-  default     = true
-}
-
 variable "token" {
   type        = string
   description = "The personal access token used to access the repository"
@@ -39,5 +33,11 @@ variable "token" {
 variable "public" {
   type        = bool
   description = "Flag indicating that the repo should be public or private"
+  default     = false
+}
+
+variable "strict" {
+  type        = bool
+  description = "Flag indicating that an error should be thrown if the repo already exists"
   default     = false
 }

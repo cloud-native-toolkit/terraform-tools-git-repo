@@ -14,6 +14,7 @@ REPO="$3"
 PUBLIC="$4"
 BRANCH="${5:-main}"
 MODULE_ID="${6}"
+STRICT="$7"
 
 if [[ -z "${HOSTNAME}" ]] || [[ -z "${ORG}" ]] || [[ -z "${REPO}" ]]; then
   echo "Usage: create-github-repo.sh HOSTNAME ORG REPO"
