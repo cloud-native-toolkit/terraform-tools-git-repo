@@ -24,7 +24,7 @@ fi
 export GITHUB_TOKEN="${TOKEN}"
 
 echo "Cloning https://${HOSTNAME}/${ORG}/${REPO}"
-git clone "https://${TOKEN}:${HOSTNAME}/${ORG}/${REPO}" .tmprepo
+git clone "https://${TOKEN}@${HOSTNAME}/${ORG}/${REPO}" .tmprepo
 
 echo "Checking owner_module value"
 cat .tmprepo/.owner_module
