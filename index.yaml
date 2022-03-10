@@ -10,6 +10,19 @@ versions:
   - platforms: []
     dependencies: []
     variables: [{name: host, type: string, description: The host for the git repository.}, {name: type, type: string, description: The type of the hosted git repository (github or gitlab).}, {name: org, type: string, description: The org/group where the git repository exists/will be provisioned.}, {name: repo, type: string, description: The short name of the repository (i.e. the part after the org/group name)}, {name: branch, type: string, description: The name of the branch that will be used. If the repo already exists (provision=false) then it is assumed this branch already exists as well, default: main, optional: true}, {name: token, type: string, description: "The personal access token used to access the repository\n  sensitive   = true"}, {name: public, type: bool, description: Flag indicating that the repo should be public or private, default: false, optional: true}, {name: strict, type: bool, description: Flag indicating that an error should be thrown if the repo already exists, default: false, optional: true}]
+    version: v1.6.1
+    outputs:
+      - name: repo
+        description: The git repo
+      - name: url
+        description: The git repo url
+      - name: branch
+        description: The git repo branch
+      - name: token
+        description: The token used to authenticate to the gitops repo
+  - platforms: []
+    dependencies: []
+    variables: [{name: host, type: string, description: The host for the git repository.}, {name: type, type: string, description: The type of the hosted git repository (github or gitlab).}, {name: org, type: string, description: The org/group where the git repository exists/will be provisioned.}, {name: repo, type: string, description: The short name of the repository (i.e. the part after the org/group name)}, {name: branch, type: string, description: The name of the branch that will be used. If the repo already exists (provision=false) then it is assumed this branch already exists as well, default: main, optional: true}, {name: token, type: string, description: "The personal access token used to access the repository\n  sensitive   = true"}, {name: public, type: bool, description: Flag indicating that the repo should be public or private, default: false, optional: true}, {name: strict, type: bool, description: Flag indicating that an error should be thrown if the repo already exists, default: false, optional: true}]
     version: v1.6.0
     outputs:
       - name: repo
