@@ -26,6 +26,11 @@ export GITHUB_TOKEN="${TOKEN}"
 echo "Cloning https://${HOSTNAME}/${ORG}/${REPO}"
 git clone "https://${TOKEN}@${HOSTNAME}/${ORG}/${REPO}" .tmprepo
 
+if [[ ! -f .tmprepo/.owner_module ]]; then
+  echo "owner_module value missing from repo"
+  exit 0
+fi
+
 echo "Checking owner_module value"
 cat .tmprepo/.owner_module
 
