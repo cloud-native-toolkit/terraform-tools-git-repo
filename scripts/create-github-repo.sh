@@ -35,7 +35,12 @@ fi
 
 if "${GH}" repo view ${ORG}/${REPO} --json url 1> /dev/null 2> /dev/null; then
   echo "Repo already exists"
-  exit 0
+
+  if [[ "${STRICT}" == "true" ]]; then
+    exit 1
+  else
+    exit 0
+  fi
 else
   echo "Creating repo: ${ORG}/${REPO} ${PUBLIC_PRIVATE}"
   "${GH}" repo create -y "${ORG}/${REPO}" ${PUBLIC_PRIVATE}

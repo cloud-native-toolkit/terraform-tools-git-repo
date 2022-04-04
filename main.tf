@@ -13,7 +13,26 @@ resource random_id module_uuid {
   byte_length = 12
 }
 
+data external check_status {
+  program = ["bash", "${path.module}/scripts/check-repo.sh"]
+
+  query = {
+    bin_dir   = module.setup_clis.bin_dir
+    type      = var.type
+    host      = var.host
+    org       = var.org
+    repo      = var.repo
+    token     = var.token
+    public    = var.public
+    branch    = var.branch
+    module_id = random_id.module_uuid.id
+    strict    = var.strict
+  }
+}
+
 resource null_resource create_repo {
+  count = data.external.check_status.result.provision ? 1 : 0
+
   triggers = {
     TYPE  = var.type
     HOST  = var.host
