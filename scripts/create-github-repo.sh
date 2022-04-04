@@ -17,12 +17,12 @@ MODULE_ID="${6}"
 STRICT="$7"
 
 if [[ -z "${HOSTNAME}" ]] || [[ -z "${ORG}" ]] || [[ -z "${REPO}" ]]; then
-  echo "Usage: create-github-repo.sh HOSTNAME ORG REPO"
+  echo "Usage: create-github-repo.sh HOSTNAME ORG REPO" >&2
   exit 1
 fi
 
 if [[ -z "${TOKEN}" ]]; then
-  echo "TOKEN environment variable must be set"
+  echo "TOKEN environment variable must be set" >&2
   exit 1
 fi
 
@@ -35,7 +35,12 @@ fi
 
 if "${GH}" repo view ${ORG}/${REPO} --json url 1> /dev/null 2> /dev/null; then
   echo "Repo already exists"
-  exit 0
+
+  if [[ "${STRICT}" == "true" ]]; then
+    exit 1
+  else
+    exit 0
+  fi
 else
   echo "Creating repo: ${ORG}/${REPO} ${PUBLIC_PRIVATE}"
   "${GH}" repo create -y "${ORG}/${REPO}" ${PUBLIC_PRIVATE}

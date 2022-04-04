@@ -17,16 +17,16 @@ MODULE_ID="$6"
 STRICT="$7"
 
 if [[ -z "${HOSTNAME}" ]] || [[ -z "${ORG}" ]] || [[ -z "${REPO}" ]]; then
-  echo "Usage: create-gitlab-repo.sh HOSTNAME ORG REPO"
+  echo "Usage: create-gitlab-repo.sh HOSTNAME ORG REPO" >&2
   exit 1
 fi
 
 if [[ -z "${TOKEN}" ]]; then
-  echo "TOKEN environment variable must be set"
+  echo "TOKEN environment variable must be set" >&2
   exit 1
 fi
 
-"${GLAB}" auth login --hostname "${HOSTNAME}" --token "${TOKEN}"
+"${GLAB}" auth login --hostname "${HOSTNAME}" --token "${TOKEN}" 1> /dev/null
 
 PUBLIC_PRIVATE="--private"
 if [[ "${PUBLIC}" == "true" ]]; then
