@@ -16,15 +16,15 @@ if [[ -z "${TOKEN}" ]]; then
   exit 1
 fi
 
-git config --global user.email "cloudnativetoolkit@gmail.com"
-git config --global user.name "Cloud-Native Toolkit"
-
 mkdir -p .tmprepo
 
 cd .tmprepo || exit 1
 
 git init
 git remote add origin "https://${TOKEN}@${HOSTNAME}/${ORG}/${REPO}"
+
+git config user.email "cloudnativetoolkit@gmail.com"
+git config user.name "Cloud-Native Toolkit"
 
 echo "# ${REPO}" > README.md
 git add README.md
