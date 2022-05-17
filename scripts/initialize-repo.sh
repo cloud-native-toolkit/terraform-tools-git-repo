@@ -16,6 +16,15 @@ if [[ -z "${TOKEN}" ]]; then
   exit 1
 fi
 
+if [[ -n "${BIN_DIR}" ]]; then
+  export PATH="${BIN_DIR}:${PATH}"
+fi
+
+if ! command -v git 1> /dev/null 2> /dev/null; then
+  echo "git cli not found" >&2
+  exit 1
+fi
+
 mkdir -p .tmprepo
 
 cd .tmprepo || exit 1
