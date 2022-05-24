@@ -12,9 +12,26 @@ jobs:
     if: ${{ !contains( github.event.pull_request.labels.*.name, 'skip ci' ) }}
     uses: ./.github/workflows/verify-workflow.yaml
     secrets:
-      IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
-      GIT_ADMIN_USERNAME: ${{ secrets.GIT_ADMIN_USERNAME }}
-      GIT_ADMIN_TOKEN: ${{ secrets.GIT_ADMIN_TOKEN }}
+      GITHUB_USERNAME: ${{ secrets.GIT_ADMIN_USERNAME }}
+      GITHUB_TEST_TOKEN: ${{ secrets.GIT_ADMIN_TOKEN }}
+      GITHUB_ORG: cloud-native-toolkit-test
+      GITHUB_HOST: github.com
+      GHE_USERNAME: ${{ secrets.GHE_USERNAME }}
+      GHE_TOKEN: ${{ secrets.GHE_TOKEN }}
+      GHE_ORG: ${{ secrets.GHE_USERNAME }}
+      GHE_HOST: github.ibm.com
+      GITLAB_USERNAME: ${{ secrets.GITLAB_USERNAME }}
+      GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+      GITLAB_ORG: ${{ secrets.GITLAB_USERNAME }}
+      GITLAB_HOST: us-south.git.cloud.ibm.com
+      BITBUCKET_USERNAME: ${{ secrets.BITBUCKET_USERNAME }}
+      BITBUCKET_TOKEN: ${{ secrets.BITBUCKET_TOKEN }}
+      BITBUCKET_ORG: ${{ secrets.BITBUCKET_USERNAME }}
+      BITBUCKET_HOST: bitbucket.org
+      GITEA_USERNAME: ${{ secrets.GITEA_USERNAME }}
+      GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+      GITEA_ORG: ${{ secrets.GITEA_USERNAME }}
+      GITEA_HOST: gitea-gitea.toolkit-dev410-2ab66b053c14936810608de9a1deac9c-0000.us-east.containers.appdomain.cloud
 
   verifyMetadata:
     uses: cloud-native-toolkit/action-workflows/.github/workflows/verify-module-metadata.yaml@v1

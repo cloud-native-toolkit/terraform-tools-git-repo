@@ -2,32 +2,51 @@
 
 set -e
 
-SCRIPT_DIR=$(cd $(dirname $0); pwd -P)
+SCRIPT_DIR=$(cd $(dirname "$0"); pwd -P)
 
-TYPE="$1"
-HOSTNAME="$2"
-ORG="$3"
-REPO="$4"
-MODULE_ID="$5"
+GIT_HOST="$1"
+ORG="$2"
+REPO="$3"
+MODULE_ID="$4"
 
-if [[ -z "${TYPE}" ]] || [[ -z "${HOSTNAME}" ]] || [[ -z "${ORG}" ]] || [[ -z "${REPO}" ]]; then
-  echo "Usage: delete-repo.sh TYPE HOSTNAME ORG REPO"
+if [[ -z "${GIT_HOST}" ]] || [[ -z "${ORG}" ]] || [[ -z "${REPO}" ]]; then
+  echo "Usage: delete-repo.sh GIT_HOST ORG REPO"
   exit 1
 fi
 
-if [[ -z "${TOKEN}" ]]; then
-  echo "TOKEN environment variable must be set"
+if [[ -z "${GIT_USERNAME}" ]]; then
+  echo "GIT_USERNAME environment variable must be set"
   exit 1
+fi
+
+if [[ -z "${GIT_TOKEN}" ]]; then
+  echo "GIT_TOKEN environment variable must be set"
+  exit 1
+fi
+
+if [[ -n "${BIN_DIR}" ]]; then
+  export PATH="${BIN_DIR}:${PATH}"
 fi
 
 echo "Sleeping for 1 minute before deleting repo to allow things to settle"
 sleep 60
 
-if [[ "${TYPE}" == "github" ]]; then
-  TOKEN="${TOKEN}" USER="${USER}" "${SCRIPT_DIR}/delete-github-repo.sh" "${HOSTNAME}" "${ORG}" "${REPO}" "${MODULE_ID}"
-elif [[ "${TYPE}" == "gitlab" ]]; then
-  TOKEN="${TOKEN}" USER="${USER}" "${SCRIPT_DIR}/delete-gitlab-repo.sh" "${HOSTNAME}" "${ORG}" "${REPO}" "${MODULE_ID}"
-else
-  echo "Unsupported repo type: $TYPE"
-  exit 1
+mkdir -p .tmp
+
+echo "Cloning https://${GIT_HOST}/${ORG}/${REPO}"
+git clone "https://${GIT_USERNAME}:${GIT_TOKEN}@${GIT_HOST}/${ORG}/${REPO}" ".tmp/${REPO}"
+
+if [[ ! -f ".tmp/${REPO}/.owner_module" ]]; then
+  echo "owner_module value missing from repo"
+  exit 0
 fi
+
+echo "Checking owner_module value"
+cat ".tmp/${REPO}/.owner_module"
+
+if [[ $(cat ".tmp/${REPO}/.owner_module") == "${MODULE_ID}" ]]; then
+  echo "Deleting repo: https://${GIT_HOST}/${ORG}/${REPO}"
+  gitu delete "https://${GIT_HOST}/${ORG}/${REPO}"
+fi
+
+rm -rf ".tmp/${REPO}"

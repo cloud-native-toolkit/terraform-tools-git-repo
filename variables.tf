@@ -3,11 +3,6 @@ variable "host" {
   description = "The host for the git repository."
 }
 
-variable "type" {
-  type        = string
-  description = "The type of the hosted git repository (github or gitlab)."
-}
-
 variable "org" {
   type        = string
   description = "The org/group where the git repository exists/will be provisioned."
@@ -18,10 +13,9 @@ variable "repo" {
   description = "The short name of the repository (i.e. the part after the org/group name)"
 }
 
-variable "branch" {
+variable "username" {
   type        = string
-  description = "The name of the branch that will be used. If the repo already exists (provision=false) then it is assumed this branch already exists as well"
-  default     = "main"
+  description = "The username used to access the repository"
 }
 
 variable "token" {

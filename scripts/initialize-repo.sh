@@ -3,36 +3,37 @@
 HOSTNAME="$1"
 ORG="$2"
 REPO="$3"
-BRANCH="$4"
-MODULE_ID="$5"
+MODULE_ID="$4"
 
 if [[ -z "${HOSTNAME}" ]] || [[ -z "${ORG}" ]] || [[ -z "${REPO}" ]]; then
   echo "Usage: initialize-repo.sh HOSTNAME ORG REPO"
   exit 1
 fi
 
-if [[ -z "${TOKEN}" ]]; then
-  echo "TOKEN environment variable must be set"
+if [[ -z "${GIT_USERNAME}" ]]; then
+  echo "GIT_USERNAME environment variable must be set"
   exit 1
 fi
 
-mkdir -p .tmprepo
+if [[ -z "${GIT_TOKEN}" ]]; then
+  echo "GIT_TOKEN environment variable must be set"
+  exit 1
+fi
 
-cd .tmprepo || exit 1
+mkdir -p .tmp
 
-git init
-git remote add origin "https://${TOKEN}@${HOSTNAME}/${ORG}/${REPO}"
+git clone "https://${GIT_USERNAME}:${GIT_TOKEN}@${HOSTNAME}/${ORG}/${REPO}" "./tmp${REPO}"
+
+cd "./tmp${REPO}"
 
 git config user.email "cloudnativetoolkit@gmail.com"
 git config user.name "Cloud-Native Toolkit"
 
-echo "# ${REPO}" > README.md
-git add README.md
 echo "${MODULE_ID}" > .owner_module
 git add .owner_module
-git commit -m "Initial commit"
-git branch -m "$(git rev-parse --abbrev-ref HEAD)" "${BRANCH}"
-git push -u origin "${BRANCH}"
+git commit -m "Saves owner_module id"
+git push -u origin "$(git rev-parse --abbrev-ref HEAD)"
 
-cd ..
-rm -rf .tmprepo
+cd -
+
+rm -rf ".tmp/${REPO}"

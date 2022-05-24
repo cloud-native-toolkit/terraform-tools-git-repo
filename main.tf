@@ -1,45 +1,49 @@
 
 locals {
-  branch = var.branch != null && var.branch != "" ? var.branch : "main"
+  org = var.org != null && var.org != "" ? var.org : var.username
+  branch = "main" // TODO should be looked up using an external data
 }
 
 module setup_clis {
   source = "github.com/cloud-native-toolkit/terraform-util-clis.git"
 
-  clis = ["gh", "glab"]
+  clis = ["jq", "gitu"]
 }
 
 resource random_id module_uuid {
   byte_length = 12
 }
 
-resource null_resource create_repo {
+resource null_resource repo {
   triggers = {
-    TYPE  = var.type
     HOST  = var.host
-    ORG   = var.org
+    ORG   = local.org
     REPO  = var.repo
+    USERNAME = var.username
     TOKEN = var.token
     BIN_DIR = module.setup_clis.bin_dir
     MODULE_ID = random_id.module_uuid.id
   }
 
   provisioner "local-exec" {
-    command = "${path.module}/scripts/create-repo.sh '${self.triggers.TYPE}' '${self.triggers.HOST}' '${self.triggers.ORG}' '${self.triggers.REPO}' '${var.public}' '${var.branch}' '${self.triggers.MODULE_ID}' '${var.strict}'"
+    command = "${path.module}/scripts/create-repo.sh '${self.triggers.HOST}' '${self.triggers.ORG}' '${self.triggers.REPO}' '${var.public}' '${self.triggers.MODULE_ID}' '${var.strict}'"
 
     environment = {
-      TOKEN = nonsensitive(self.triggers.TOKEN)
+      GIT_USERNAME = self.triggers.USERNAME
+      GIT_TOKEN = nonsensitive(self.triggers.TOKEN)
       BIN_DIR = self.triggers.BIN_DIR
     }
   }
 
   provisioner "local-exec" {
     when = destroy
-    command = "${path.module}/scripts/delete-repo.sh '${self.triggers.TYPE}' '${self.triggers.HOST}' '${self.triggers.ORG}' '${self.triggers.REPO}' '${self.triggers.MODULE_ID}'"
+    command = "${path.module}/scripts/delete-repo.sh '${self.triggers.HOST}' '${self.triggers.ORG}' '${self.triggers.REPO}' '${self.triggers.MODULE_ID}'"
 
     environment = {
-      TOKEN = nonsensitive(self.triggers.TOKEN)
+      GIT_USERNAME = self.triggers.USERNAME
+      GIT_TOKEN = nonsensitive(self.triggers.TOKEN)
       BIN_DIR = self.triggers.BIN_DIR
     }
   }
 }
+
