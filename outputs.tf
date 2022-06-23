@@ -18,13 +18,19 @@ output "name" {
 
 output "repo" {
   description = "The git repo"
-  value       = "${var.host}/${local.org}/${var.repo}"
+  value       = data.external.repo_info.result.uri
+  depends_on  = [null_resource.repo]
+}
+
+output "project" {
+  description = "The git project (primarily for Azure DevOps)"
+  value       = var.project
   depends_on  = [null_resource.repo]
 }
 
 output "url" {
   description = "The git repo url"
-  value       = "https://${var.host}/${var.org}/${var.repo}"
+  value       = data.external.repo_info.result.url
   depends_on  = [null_resource.repo]
 }
 

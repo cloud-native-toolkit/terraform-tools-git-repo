@@ -4,46 +4,10 @@ name: Verify
 on:
   workflow_call:
     secrets:
-      GITHUB_USERNAME:
+      GITU_CONFIG:
         required: true
-      GITHUB_TEST_TOKEN:
-        required: true
-      GITHUB_ORG:
-        required: true
-      GITHUB_HOST:
-        required: true
-      GHE_USERNAME:
-        required: true
-      GHE_TOKEN:
-        required: true
-      GHE_ORG:
-        required: true
-      GHE_HOST:
-        required: true
-      GITLAB_USERNAME:
-        required: true
-      GITLAB_TOKEN:
-        required: true
-      GITLAB_ORG:
-        required: true
-      GITLAB_HOST:
-        required: true
-      BITBUCKET_USERNAME:
-        required: true
-      BITBUCKET_TOKEN:
-        required: true
-      BITBUCKET_ORG:
-        required: true
-      BITBUCKET_HOST:
-        required: true
-      GITEA_USERNAME:
-        required: true
-      GITEA_TOKEN:
-        required: true
-      GITEA_ORG:
-        required: true
-      GITEA_HOST:
-        required: true
+      GIT_ORG:
+        required: false
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -54,11 +18,12 @@ jobs:
     strategy:
       matrix:
         testcase:
-          - github
-          - ghe
-          - gitlab
-          - bitbucket
-          - gitea
+          - github.com
+          - github.ibm.com
+          - us-south.git.cloud.ibm.com
+          - bitbucket.org
+          - dev.azure.com
+          - gitea-gitea.toolkit-dev410-2ab66b053c14936810608de9a1deac9c-0000.us-east.containers.appdomain.cloud
       fail-fast: false
 
     env:
@@ -73,69 +38,60 @@ jobs:
         name: Set up variables
         env:
           GIT_ORG: ${{ secrets.GIT_ORG }}
+          GITU_CONFIG: ${{ secrets.GITU_CONFIG }}
+          GIT_PROJECT: ${{ secrets.GIT_PROJECT }}
         shell: bash
         run: |
-          repo=$(echo ${GITHUB_REPOSITORY} | sed -E "s~.*/[^-]+-(.*)~\1~g")
+          repo=$(echo "${GITHUB_REPOSITORY}" | sed -E "s~.*/[^-]+-(.*)~\1~g")
           echo "Repo: $repo"
           echo "::set-output name=repo::$repo"
+
+          org="${GIT_ORG}"
+          echo "Org: $org"
+          echo "::set-output name=org::$org"
           
-          case ${{ matrix.testcase }} in
-            github)
-              echo "::set-output name=username::${{ secrets.GITHUB_USERNAME }}"
-              echo "::set-output name=token::${{ secrets.GITHUB_TEST_TOKEN }}"
-              echo "::set-output name=org::${{ secrets.GITHUB_ORG }}"
-              echo "::set-output name=host::${{ secrets.GITHUB_HOST }}"
-              ;;
-            ghe)
-              echo "::set-output name=username::${{ secrets.GHE_USERNAME }}"
-              echo "::set-output name=token::${{ secrets.GHE_TOKEN }}"
-              echo "::set-output name=org::${{ secrets.GHE_ORG }}"
-              echo "::set-output name=host::${{ secrets.GHE_HOST }}"
-              ;;
-            gitlab)
-              echo "::set-output name=username::${{ secrets.GITLAB_USERNAME }}"
-              echo "::set-output name=token::${{ secrets.GITLAB_TOKEN }}"
-              echo "::set-output name=org::${{ secrets.GITLAB_ORG }}"
-              echo "::set-output name=host::${{ secrets.GITLAB_HOST }}"
-              ;;
-            bitbucket)
-              echo "::set-output name=username::${{ secrets.BITBUCKET_USERNAME }}"
-              echo "::set-output name=token::${{ secrets.BITBUCKET_TOKEN }}"
-              echo "::set-output name=org::${{ secrets.BITBUCKET_ORG }}"
-              echo "::set-output name=host::${{ secrets.BITBUCKET_HOST }}"
-              ;;
-            gitea)
-              echo "::set-output name=username::${{ secrets.GITEA_USERNAME }}"
-              echo "::set-output name=token::${{ secrets.GITEA_TOKEN }}"
-              echo "::set-output name=org::${{ secrets.GITEA_ORG }}"
-              echo "::set-output name=host::${{ secrets.GITEA_HOST }}"
-              ;;
-            *)
-              echo "Unrecognized git server type: ${{ matrix.testcase }}" >&2
-              exit 1
-              ;;
-          esac
+          project="${GIT_PROJECT:-Test}"
+          echo "Project: $project"
+          echo "::set-output name=project::$project"          
+          
+          username=$(echo "${GITU_CONFIG}" |  yq '.credentials[] | select(.host == "${{ matrix.testcase }}") | .username')
+          echo "Username: $username"
+          if [[ -z "${username}" ]]; then
+            echo "Username config missing" >&2
+            exit 1
+          fi
+          echo "::set-output name=username::$username"
+          
+          token=$(echo "${GITU_CONFIG}" |  yq '.credentials[] | select(.host == "${{ matrix.testcase }}") | .token')
+          echo "Token: xxx"
+          if [[ -z "${token}" ]]; then
+            echo "Token config missing" >&2
+            exit 1
+          fi
+          echo "::set-output name=token::$token"
 
       - name: Verify deploy on ${{ matrix.testcase }}
         uses: cloud-native-toolkit/action-module-verify-deploy@main
         with:
-          clusterId: ${{ matrix.testcase }}
+          clusterId: "no-config"
           validateDeployScript: .github/scripts/validate-deploy.sh
         env:
+          TF_VAR_git_host: ${{ matrix.testcase }}
           TF_VAR_git_username: ${{ steps.variables.outputs.username }}
           TF_VAR_git_token: ${{ steps.variables.outputs.token }}
           TF_VAR_git_org: ${{ steps.variables.outputs.org }}
           TF_VAR_git_repo: ${{ steps.variables.outputs.repo }}
-          TF_VAR_git_host: ${{ steps.variables.outputs.host }}
+          TF_VAR_git_project: ${{ steps.variables.outputs.project }}
 
       - name: Verify destroy on ${{ matrix.testcase }}
         uses: cloud-native-toolkit/action-module-verify-destroy@main
         if: ${{ always() }}
         with:
-          clusterId: ${{ matrix.testcase }}
+          clusterId: "no-config"
         env:
+          TF_VAR_git_host: ${{ matrix.testcase }}
           TF_VAR_git_username: ${{ steps.variables.outputs.username }}
           TF_VAR_git_token: ${{ steps.variables.outputs.token }}
           TF_VAR_git_org: ${{ steps.variables.outputs.org }}
           TF_VAR_git_repo: ${{ steps.variables.outputs.repo }}
-          TF_VAR_git_host: ${{ steps.variables.outputs.host }}
+          TF_VAR_git_project: ${{ steps.variables.outputs.project }}

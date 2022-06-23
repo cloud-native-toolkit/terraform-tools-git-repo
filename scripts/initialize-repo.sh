@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-HOSTNAME="$1"
-ORG="$2"
-REPO="$3"
-MODULE_ID="$4"
+REPO_URL="$1"
+MODULE_ID="$2"
 
-if [[ -z "${HOSTNAME}" ]] || [[ -z "${ORG}" ]] || [[ -z "${REPO}" ]]; then
+if [[ -z "${REPO_URL}" ]]; then
   echo "Usage: initialize-repo.sh HOSTNAME ORG REPO"
   exit 1
 fi
@@ -20,11 +18,23 @@ if [[ -z "${GIT_TOKEN}" ]]; then
   exit 1
 fi
 
-mkdir -p .tmp
+if [[ -z "${TMP_DIR}" ]]; then
+  TMP_DIR=".tmp/git-repo"
+fi
 
-git clone "https://${GIT_USERNAME}:${GIT_TOKEN}@${HOSTNAME}/${ORG}/${REPO}" "./tmp${REPO}"
+REPO_DIR="${TMP_DIR}/repo-${MODULE_ID}"
+START_DIR="${PWD}"
 
-cd "./tmp${REPO}"
+mkdir -p "${REPO_DIR}"
+trap "cd ${START_DIR} && rm -rf ${REPO_DIR}" EXIT
+
+REPO_URI=$(echo "${REPO_URL}" | sed -E "s~^https?://~~g")
+
+echo "Initializing repo - https://${REPO_URI}"
+
+git clone "https://${GIT_USERNAME}:${GIT_TOKEN}@${REPO_URI}" "${REPO_DIR}"
+
+cd "${REPO_DIR}" || exit 1
 
 git config user.email "cloudnativetoolkit@gmail.com"
 git config user.name "Cloud-Native Toolkit"
@@ -33,7 +43,3 @@ echo "${MODULE_ID}" > .owner_module
 git add .owner_module
 git commit -m "Saves owner_module id"
 git push -u origin "$(git rev-parse --abbrev-ref HEAD)"
-
-cd -
-
-rm -rf ".tmp/${REPO}"

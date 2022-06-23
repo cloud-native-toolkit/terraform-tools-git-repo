@@ -30,6 +30,12 @@ variable "public" {
   default     = false
 }
 
+variable "project" {
+  type        = string
+  description = "The project that will be used for the git repo"
+  default     = ""
+}
+
 variable "strict" {
   type        = bool
   description = "Flag indicating that an error should be thrown if the repo already exists"

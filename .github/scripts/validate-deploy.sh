@@ -4,13 +4,13 @@ BIN_DIR=$(cat .bin_dir)
 
 export PATH="${BIN_DIR}:${PATH}"
 
-HOST=$(jq -r '.host' .git_output)
-ORG=$(jq -r '.org' .git_output)
-REPO=$(jq -r '.name' .git_output)
+REPO=$(jq -r '.repo' .git_output)
 USERNAME=$(jq -r '.username' .git_output)
 TOKEN=$(jq -r '.token' .git_output)
 
-git clone "https://${USERNAME}:${TOKEN}@${HOST}/${ORG}/${REPO}" .repo || exit 1
+echo "Cloning repo: ${REPO}"
+
+git clone "https://${USERNAME}:${TOKEN}@${REPO}" .repo || exit 1
 
 echo "Repo"
 ls -l .repo

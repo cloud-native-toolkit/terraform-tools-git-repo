@@ -31,22 +31,36 @@ fi
 echo "Sleeping for 1 minute before deleting repo to allow things to settle"
 sleep 60
 
-mkdir -p .tmp
+REPO_URL=$(gitu exists -h "${GIT_HOST}" -o "${ORG}" "${REPO}" | jq -r '.http_url // empty')
+if [[ -z "${REPO_URL}" ]]; then
+  echo "Repo not found"
+  exit 0
+fi
 
-echo "Cloning https://${GIT_HOST}/${ORG}/${REPO}"
-git clone "https://${GIT_USERNAME}:${GIT_TOKEN}@${GIT_HOST}/${ORG}/${REPO}" ".tmp/${REPO}"
+REPO_URI=$(echo "${REPO_URL}" | sed -E "s~^https?://~~g")
 
-if [[ ! -f ".tmp/${REPO}/.owner_module" ]]; then
+if [[ -z "${TMP_DIR}" ]]; then
+  TMP_DIR=".tmp/git-repo"
+fi
+
+REPO_DIR="${TMP_DIR}/repo-${MODULE_ID}"
+START_DIR="${PWD}"
+
+mkdir -p "${REPO_DIR}"
+trap "cd ${START_DIR} && rm -rf ${REPO_DIR}" EXIT
+
+echo "Cloning https://${REPO_URI}"
+git clone "https://${GIT_USERNAME}:${GIT_TOKEN}@${REPO_URI}" "${REPO_DIR}"
+
+if [[ ! -f "${REPO_DIR}/.owner_module" ]]; then
   echo "owner_module value missing from repo"
   exit 0
 fi
 
 echo "Checking owner_module value"
-cat ".tmp/${REPO}/.owner_module"
+cat "${REPO_DIR}/.owner_module"
 
-if [[ $(cat ".tmp/${REPO}/.owner_module") == "${MODULE_ID}" ]]; then
-  echo "Deleting repo: https://${GIT_HOST}/${ORG}/${REPO}"
-  gitu delete "https://${GIT_HOST}/${ORG}/${REPO}"
+if [[ $(cat "${REPO_DIR}/.owner_module") == "${MODULE_ID}" ]]; then
+  echo "Deleting repo: https://${REPO_URI}"
+  gitu delete -h "${GIT_HOST}" -o "${ORG}" "${REPO}"
 fi
-
-rm -rf ".tmp/${REPO}"

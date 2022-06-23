@@ -23,3 +23,7 @@ variable "git_host" {
   type        = string
   description = "Git host"
 }
+
+variable "git_project" {
+  default = ""
+}

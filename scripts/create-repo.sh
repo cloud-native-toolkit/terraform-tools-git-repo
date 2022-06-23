@@ -30,9 +30,14 @@ if [[ -n "${BIN_DIR}" ]]; then
   export PATH="${BIN_DIR}:${PATH}"
 fi
 
-export GIT_HOST
+if [[ -z "${TMP_DIR}" ]]; then
+  TMP_DIR=".tmp/git-repo"
+fi
+mkdir -p "${TMP_DIR}"
 
-if gitu exists "${REPO}" -o "${ORG}"; then
+export GIT_HOST TMP_DIR
+
+if gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" -q; then
   echo "Repo already exists"
 
   if [[ "${STRICT}" == "true" ]]; then
@@ -42,7 +47,9 @@ if gitu exists "${REPO}" -o "${ORG}"; then
   fi
 else
   echo "Creating repo: ${ORG}/${REPO} ${PUBLIC_PRIVATE}"
-  gitu create "${REPO}" -o "${ORG}" --public="${PUBLIC}" --autoInit="true"
+  gitu create "${REPO}" -h "${GIT_HOST}" -o "${ORG}" --public="${PUBLIC}" --autoInit="true"
 
-  "${SCRIPT_DIR}/initialize-repo.sh" "${GIT_HOST}" "${ORG}" "${REPO}" "${MODULE_ID}"
+  REPO_URL=$(gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" | jq -r '.http_url // empty')
+
+  "${SCRIPT_DIR}/initialize-repo.sh" "${REPO_URL}" "${MODULE_ID}"
 fi
