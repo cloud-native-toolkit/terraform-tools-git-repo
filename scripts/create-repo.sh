@@ -56,7 +56,7 @@ else
   else
     echo "Creating repo: ${ORG}/${REPO} ${PUBLIC_PRIVATE}"
   fi
-  gitu create "${REPO}" -h "${GIT_HOST}" -o "${ORG}" --public="${PUBLIC}" --autoInit="true"
+  gitu create "${REPO}" -h "${GIT_HOST}" -o "${ORG}" --public="${PUBLIC}" --autoInit="true" --debug
 
   if gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" 1> /dev/null; then
     REPO_URL=$(gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" | jq -r '.http_url // empty')
