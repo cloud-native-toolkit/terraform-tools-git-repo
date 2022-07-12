@@ -42,6 +42,62 @@ versions:
           Flag indicating that an error should be thrown if the repo already
           exists
         default: false
+    version: v2.1.2
+    outputs:
+      - name: host
+        description: The git host
+      - name: org
+        description: The git org
+      - name: name
+        description: The git repo
+      - name: repo
+        description: The git repo
+      - name: project
+        description: The git project (primarily for Azure DevOps)
+      - name: url
+        description: The git repo url
+      - name: branch
+        description: The git repo branch
+      - name: username
+        description: The username used to authenticate to the gitops repo
+      - name: token
+        description: The token used to authenticate to the gitops repo
+        sensitive: true
+  - platforms: []
+    dependencies: []
+    variables:
+      - name: host
+        type: string
+        description: The host for the git repository.
+      - name: org
+        type: string
+        description: The org/group where the git repository exists/will be provisioned.
+      - name: repo
+        type: string
+        description: >-
+          The short name of the repository (i.e. the part after the org/group
+          name)
+      - name: username
+        type: string
+        description: The username used to access the repository
+      - name: token
+        type: string
+        description: The personal access token used to access the repository
+        sensitive: true
+      - name: public
+        type: bool
+        description: Flag indicating that the repo should be public or private
+        default: false
+      - name: project
+        type: string
+        description: The project that will be used for the git repo
+        default: ''
+      - name: strict
+        type: bool
+        description: >-
+          Flag indicating that an error should be thrown if the repo already
+          exists
+        default: false
     version: v2.1.1
     outputs:
       - name: host
