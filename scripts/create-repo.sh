@@ -37,7 +37,12 @@ mkdir -p "${TMP_DIR}"
 
 export GIT_HOST TMP_DIR
 
-if gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" -q; then
+if [[ -n "${GIT_PROJECT}" ]]; then
+  echo "Checking for existing repo: ${ORG}/${GIT_PROJECT}/${REPO}"
+else
+  echo "Checking for existing repo: ${ORG}/${REPO}"
+fi
+if gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" -q 2> /dev/null; then
   echo "Repo already exists"
 
   if [[ "${STRICT}" == "true" ]]; then
@@ -46,7 +51,11 @@ if gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" -q; then
     exit 0
   fi
 else
-  echo "Creating repo: ${ORG}/${REPO} ${PUBLIC_PRIVATE}"
+  if [[ -n "${GIT_PROJECT}" ]]; then
+    echo "Creating repo: ${ORG}/${GIT_PROJECT}/${REPO} ${PUBLIC_PRIVATE}"
+  else
+    echo "Creating repo: ${ORG}/${REPO} ${PUBLIC_PRIVATE}"
+  fi
   gitu create "${REPO}" -h "${GIT_HOST}" -o "${ORG}" --public="${PUBLIC}" --autoInit="true"
 
   if gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" 1> /dev/null; then
