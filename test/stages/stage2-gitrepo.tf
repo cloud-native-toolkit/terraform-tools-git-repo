@@ -8,6 +8,7 @@ module "gitrepo" {
   token = var.git_token
   project = var.git_project
   strict = true
+  debug = true
 }
 
 resource local_file git_output {

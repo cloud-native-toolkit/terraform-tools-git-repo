@@ -41,3 +41,9 @@ variable "strict" {
   description = "Flag indicating that an error should be thrown if the repo already exists"
   default     = false
 }
+
+variable "debug" {
+  type        = bool
+  default     = false
+  description = "Flag incidicating that debug logging should be shown"
+}

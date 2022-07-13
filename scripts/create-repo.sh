@@ -37,12 +37,17 @@ mkdir -p "${TMP_DIR}"
 
 export GIT_HOST TMP_DIR
 
+DEBUG_FLAG=""
+if [[ "${DEBUG}" == "true" ]]; then
+  DEBUG_FLAG="--debug"
+fi
+
 if [[ -n "${GIT_PROJECT}" ]]; then
   echo "Checking for existing repo: ${ORG}/${GIT_PROJECT}/${REPO}"
 else
   echo "Checking for existing repo: ${ORG}/${REPO}"
 fi
-if gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" -q 2> /dev/null; then
+if gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" ${DEBUG_FLAG} -q 2> /dev/null; then
   echo "Repo already exists"
 
   if [[ "${STRICT}" == "true" ]]; then
@@ -56,9 +61,9 @@ else
   else
     echo "Creating repo: ${ORG}/${REPO} ${PUBLIC_PRIVATE}"
   fi
-  gitu create "${REPO}" -h "${GIT_HOST}" -o "${ORG}" --public="${PUBLIC}" --autoInit="true" --debug
+  gitu create "${REPO}" -h "${GIT_HOST}" -o "${ORG}" --public="${PUBLIC}" --autoInit="true" ${DEBUG_FLAG}
 
-  if gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" 1> /dev/null; then
+  if gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" ${DEBUG_FLAG} 1> /dev/null; then
     REPO_URL=$(gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" | jq -r '.http_url // empty')
   else
     exit 1

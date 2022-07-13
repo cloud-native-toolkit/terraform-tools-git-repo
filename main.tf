@@ -26,6 +26,7 @@ resource null_resource repo {
     MODULE_ID = random_id.module_uuid.id
     GIT_PROJECT = var.project
     TMP_DIR = local.tmp_dir
+    DEBUG = var.debug
   }
 
   provisioner "local-exec" {
@@ -37,6 +38,7 @@ resource null_resource repo {
       GIT_TOKEN = nonsensitive(self.triggers.TOKEN)
       BIN_DIR = self.triggers.BIN_DIR
       TMP_DIR = self.triggers.TMP_DIR
+      DEBUG = self.triggers.DEBUG
     }
   }
 
@@ -50,6 +52,7 @@ resource null_resource repo {
       GIT_TOKEN = nonsensitive(self.triggers.TOKEN)
       BIN_DIR = self.triggers.BIN_DIR
       TMP_DIR = self.triggers.TMP_DIR
+      DEBUG = self.triggers.DEBUG
     }
   }
 }
