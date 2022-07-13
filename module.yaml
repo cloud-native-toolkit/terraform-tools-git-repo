@@ -8,4 +8,6 @@ tags:
 versions:
 - platforms: []
   dependencies: []
-  variables: []
+  variables:
+    - name: debug
+      scope: global
