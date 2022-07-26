@@ -3,6 +3,8 @@
 REPO_URL="$1"
 MODULE_ID="$2"
 
+set -e
+
 if [[ -z "${REPO_URL}" ]]; then
   echo "Usage: initialize-repo.sh HOSTNAME ORG REPO"
   exit 1
@@ -39,7 +41,28 @@ gitu clone "${REPO_URL}" "${REPO_DIR}" --configName "Cloud-Native Toolkit" --con
 
 cd "${REPO_DIR}" || exit 1
 
+export BASE_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+BRANCH="init-git"
+
+git checkout -b "${BRANCH}"
+
 echo "${MODULE_ID}" > .owner_module
+
 git add .owner_module
 git commit -m "Saves owner_module id"
-git push -u origin "$(git rev-parse --abbrev-ref HEAD)"
+git push -u origin "${BRANCH}"
+
+set +e
+PR_RESULT=$(gitu pr create "${REPO_URL}" --sourceBranch "${BRANCH}" --output json)
+set -e
+
+PR_NUMBER=$(echo "${PR_RESULT}" | jq -r '.pullNumber // empty')
+
+if [[ -z "${PR_NUMBER}" ]]; then
+  gitu pr create "${REPO_URL}" --sourceBranch "${BRANCH}" --debug
+  echo "Error creating PR: ${PR_RESULT}" >&2
+  exit 1
+fi
+
+gitu pr merge "${REPO_URL}" --pullNumber "${PR_NUMBER}" --waitForBlocked=1h
