@@ -30,6 +30,16 @@ if [[ -n "${BIN_DIR}" ]]; then
   export PATH="${BIN_DIR}:${PATH}"
 fi
 
+if ! command -v gitu 1> /dev/null 2> /dev/null; then
+  echo "gitu cli not found" >&2
+  exit 1
+fi
+
+if ! command -v jq 1> /dev/null 2> /dev/null; then
+  echo "jq cli not found" >&2
+  exit 1
+fi
+
 if [[ -z "${TMP_DIR}" ]]; then
   TMP_DIR=".tmp/git-repo"
 fi
@@ -64,7 +74,7 @@ else
   gitu create "${REPO}" -h "${GIT_HOST}" -o "${ORG}" --public="${PUBLIC}" --autoInit="true" ${DEBUG_FLAG}
 
   if gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" ${DEBUG_FLAG} 1> /dev/null; then
-    REPO_URL=$(gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" | jq -r '.http_url // empty')
+    REPO_URL=$(gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" --output json | jq -r '.http_url // empty')
   else
     exit 1
   fi

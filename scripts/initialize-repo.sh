@@ -18,6 +18,11 @@ if [[ -z "${GIT_TOKEN}" ]]; then
   exit 1
 fi
 
+if ! command -v gitu 1> /dev/null 2> /dev/null; then
+  echo "gitu cli not found" >&2
+  exit 1
+fi
+
 if [[ -z "${TMP_DIR}" ]]; then
   TMP_DIR=".tmp/git-repo"
 fi
@@ -28,16 +33,11 @@ START_DIR="${PWD}"
 mkdir -p "${REPO_DIR}"
 trap "cd ${START_DIR} && rm -rf ${REPO_DIR}" EXIT
 
-REPO_URI=$(echo "${REPO_URL}" | sed -E "s~^https?://~~g")
+echo "Initializing repo - ${REPO_URL}"
 
-echo "Initializing repo - https://${REPO_URI}"
-
-git clone "https://${GIT_USERNAME}:${GIT_TOKEN}@${REPO_URI}" "${REPO_DIR}"
+gitu clone "${REPO_URL}" "${REPO_DIR}" --configName "Cloud-Native Toolkit" --configEmail "cloudnativetoolkit@gmail.com" || exit 1
 
 cd "${REPO_DIR}" || exit 1
-
-git config user.email "cloudnativetoolkit@gmail.com"
-git config user.name "Cloud-Native Toolkit"
 
 echo "${MODULE_ID}" > .owner_module
 git add .owner_module
