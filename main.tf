@@ -15,6 +15,17 @@ resource random_id module_uuid {
   byte_length = 12
 }
 
+data external ca_cert {
+  program = ["bash", "${path.module}/scripts/initialize-ca-cert.sh"]
+
+  query = {
+    bin_dir = module.setup_clis.bin_dir
+    ca_cert = var.ca_cert
+    ca_cert_file = var.ca_cert_file
+    tmp_dir = local.tmp_dir
+  }
+}
+
 resource null_resource repo {
   triggers = {
     HOST  = var.host
@@ -27,6 +38,7 @@ resource null_resource repo {
     GIT_PROJECT = var.project
     TMP_DIR = local.tmp_dir
     DEBUG = var.debug
+    CA_CERT = data.external.ca_cert.result.ca_cert_file
   }
 
   provisioner "local-exec" {
@@ -36,6 +48,7 @@ resource null_resource repo {
       GIT_PROJECT = self.triggers.GIT_PROJECT
       GIT_USERNAME = self.triggers.USERNAME
       GIT_TOKEN = nonsensitive(self.triggers.TOKEN)
+      GIT_CA_CERT = self.triggers.CA_CERT
       BIN_DIR = self.triggers.BIN_DIR
       TMP_DIR = self.triggers.TMP_DIR
       DEBUG = self.triggers.DEBUG
@@ -50,6 +63,7 @@ resource null_resource repo {
       GIT_PROJECT = self.triggers.GIT_PROJECT
       GIT_USERNAME = self.triggers.USERNAME
       GIT_TOKEN = nonsensitive(self.triggers.TOKEN)
+      GIT_CA_CERT = self.triggers.CA_CERT
       BIN_DIR = self.triggers.BIN_DIR
       TMP_DIR = self.triggers.TMP_DIR
       DEBUG = self.triggers.DEBUG
