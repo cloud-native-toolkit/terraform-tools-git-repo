@@ -23,7 +23,7 @@ jobs:
           - us-south.git.cloud.ibm.com
           - bitbucket.org
           - dev.azure.com
-          - gitea-gitea.toolkit-dev410-2ab66b053c14936810608de9a1deac9c-0000.us-east.containers.appdomain.cloud
+          - gitea-gitea.apps.rbe2qs.ocp-azure.ibm-software-everywhere.dev
       fail-fast: false
 
     env:
