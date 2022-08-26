@@ -8,6 +8,8 @@ on:
         required: true
       GIT_ORG:
         required: false
+      CA_CERT:
+        required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -69,6 +71,14 @@ jobs:
             exit 1
           fi
           echo "::set-output name=token::$token"
+          
+          ca_cert=$(echo "${GITU_CONFIG}" |  yq '.credentials[] | select(.host == "${{ matrix.testcase }}") | .caCert')
+          echo "Ca cert: ${ca_cert}"
+          echo "::set-output name=ca-cert::$ca_cert"
+          
+          if [[ -n "${ca_cert}" ]]; then
+            echo "${{ secrets.CA_CERT }}" > "${ca_cert}"
+          fi
 
       - name: Verify deploy on ${{ matrix.testcase }}
         uses: cloud-native-toolkit/action-module-verify-deploy@main
@@ -82,6 +92,7 @@ jobs:
           TF_VAR_git_org: ${{ steps.variables.outputs.org }}
           TF_VAR_git_repo: ${{ steps.variables.outputs.repo }}
           TF_VAR_git_project: ${{ steps.variables.outputs.project }}
+          TF_VAR_ca_cert_file: ${{ steps.variables.outputs.ca-cert }}
 
       - name: Verify destroy on ${{ matrix.testcase }}
         uses: cloud-native-toolkit/action-module-verify-destroy@main
@@ -95,3 +106,4 @@ jobs:
           TF_VAR_git_org: ${{ steps.variables.outputs.org }}
           TF_VAR_git_repo: ${{ steps.variables.outputs.repo }}
           TF_VAR_git_project: ${{ steps.variables.outputs.project }}
+          TF_VAR_ca_cert_file: ${{ steps.variables.outputs.ca-cert }}

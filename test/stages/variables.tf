@@ -27,3 +27,7 @@ variable "git_host" {
 variable "git_project" {
   default = ""
 }
+
+variable "ca_cert_file" {
+  default = ""
+}

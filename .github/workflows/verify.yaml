@@ -13,6 +13,7 @@ jobs:
     uses: ./.github/workflows/verify-workflow.yaml
     secrets:
       GITU_CONFIG: ${{ secrets.GITU_CONFIG }}
+      CA_CERT: ${{ secrets.GITEA_CA_CERT }}
 
   verifyMetadata:
     uses: cloud-native-toolkit/action-workflows/.github/workflows/verify-module-metadata.yaml@v1
