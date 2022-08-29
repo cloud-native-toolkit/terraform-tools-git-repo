@@ -55,6 +55,9 @@ fi
 if [[ -n "${GIT_CA_CERT}" ]]; then
   echo "CA Cert provided"
   echo ""
+else
+  echo "CA Cert not provided"
+  echo ""
 fi
 
 gitu --version

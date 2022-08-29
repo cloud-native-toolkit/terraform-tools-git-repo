@@ -43,7 +43,7 @@ if [[ -n "${GIT_CA_CERT}" ]]; then
 else
   echo "  CA Cert not provided"
   echo ""
-fi 
+fi
 
 gitu clone "${REPO_URL}" "${REPO_DIR}" --configName "Cloud-Native Toolkit" --configEmail "cloudnativetoolkit@gmail.com" || exit 1
 
