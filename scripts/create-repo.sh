@@ -52,6 +52,13 @@ if [[ "${DEBUG}" == "true" ]]; then
   DEBUG_FLAG="--debug"
 fi
 
+if [[ -n "${GIT_CA_CERT}" ]]; then
+  echo "CA Cert provided"
+  echo ""
+fi
+
+gitu --version
+
 if [[ -n "${GIT_PROJECT}" ]]; then
   echo "Checking for existing repo: ${ORG}/${GIT_PROJECT}/${REPO}"
 else
