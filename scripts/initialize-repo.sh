@@ -37,6 +37,14 @@ trap "cd ${START_DIR} && rm -rf ${REPO_DIR}" EXIT
 
 echo "Initializing repo - ${REPO_URL}"
 
+if [[ -n "${GIT_CA_CERT}" ]]; then
+  echo "  CA Cert provided"
+  echo ""
+else
+  echo "  CA Cert not provided"
+  echo ""
+fi 
+
 gitu clone "${REPO_URL}" "${REPO_DIR}" --configName "Cloud-Native Toolkit" --configEmail "cloudnativetoolkit@gmail.com" || exit 1
 
 cd "${REPO_DIR}" || exit 1
