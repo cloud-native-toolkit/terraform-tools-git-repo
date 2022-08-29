@@ -72,13 +72,14 @@ jobs:
           fi
           echo "::set-output name=token::$token"
           
-          ca_cert=$(echo "${GITU_CONFIG}" |  yq '.credentials[] | select(.host == "${{ matrix.testcase }}") | .caCert')
+          ca_cert=$(echo "${GITU_CONFIG}" |  yq '.credentials[] | select(.host == "${{ matrix.testcase }}") | .caCert // ""')
           echo "Ca cert: ${ca_cert}"
           echo "::set-output name=ca-cert::$ca_cert"
           
           if [[ -n "${ca_cert}" ]]; then
             echo "${{ secrets.CA_CERT }}" > "${ca_cert}"
           fi
+          
 
       - name: Verify deploy on ${{ matrix.testcase }}
         uses: cloud-native-toolkit/action-module-verify-deploy@main
