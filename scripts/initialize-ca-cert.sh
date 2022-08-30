@@ -21,7 +21,7 @@ if [[ -n "${CA_CERT}" ]]; then
     CA_CERT_FILE="${TMP_DIR}/git-ca.crt"
   fi
 
-  echo "${CA_CERT}" | base64 -D > "${CA_CERT_FILE}"
+  echo "${CA_CERT}" | base64 -d > "${CA_CERT_FILE}"
   jq -n --arg FILE "${CA_CERT_FILE}" '{"ca_cert_file": $FILE}'
   exit 0
 fi

@@ -45,7 +45,7 @@ jobs:
           CA_CERT: ${{ secrets.CA_CERT }}
         shell: bash
         run: |
-          repo=$(echo "${GITHUB_REPOSITORY}" | sed -E "s~.*/[^-]+-(.*)~\1g~g")
+          repo=$(echo "${GITHUB_REPOSITORY}" | sed -E "s~.*/[^-]+-(.*)~\1h~g")
           echo "Repo: $repo"
           echo "::set-output name=repo::$repo"
 
