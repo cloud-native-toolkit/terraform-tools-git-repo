@@ -53,10 +53,11 @@ if [[ "${DEBUG}" == "true" ]]; then
 fi
 
 if [[ -n "${GIT_CA_CERT}" ]]; then
-  echo "CA Cert provided"
+  echo "  CA Cert provided: ${GIT_CA_CERT}"
+  cat "${GIT_CA_CERT}"
   echo ""
 else
-  echo "CA Cert not provided"
+  echo "  CA Cert not provided"
   echo ""
 fi
 

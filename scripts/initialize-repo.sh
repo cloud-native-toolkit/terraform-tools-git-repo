@@ -57,7 +57,7 @@ trap "cd ${START_DIR} && rm -rf ${REPO_DIR}" EXIT
 echo "Initializing repo - ${REPO_URL}"
 
 if [[ -n "${GIT_CA_CERT}" ]]; then
-  echo "  CA Cert provided"
+  echo "  CA Cert provided: ${GIT_CA_CERT}"
   cat "${GIT_CA_CERT}"
   echo ""
 else
