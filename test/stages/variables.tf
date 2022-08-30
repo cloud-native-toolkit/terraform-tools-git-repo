@@ -31,3 +31,7 @@ variable "git_project" {
 variable "ca_cert_file" {
   default = ""
 }
+
+variable "ca_cert" {
+  default = ""
+}

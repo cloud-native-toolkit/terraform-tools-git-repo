@@ -42,9 +42,10 @@ jobs:
           GIT_ORG: ${{ secrets.GIT_ORG }}
           GITU_CONFIG: ${{ secrets.GITU_CONFIG }}
           GIT_PROJECT: ${{ secrets.GIT_PROJECT }}
+          CA_CERT: ${{ secrets.CA_CERT }}
         shell: bash
         run: |
-          repo=$(echo "${GITHUB_REPOSITORY}" | sed -E "s~.*/[^-]+-(.*)~\1e~g")
+          repo=$(echo "${GITHUB_REPOSITORY}" | sed -E "s~.*/[^-]+-(.*)~\1f~g")
           echo "Repo: $repo"
           echo "::set-output name=repo::$repo"
 
@@ -74,10 +75,9 @@ jobs:
           
           ca_cert=$(echo "${GITU_CONFIG}" |  yq '.credentials[] | select(.host == "${{ matrix.testcase }}") | .caCert // ""')
           if [[ -n "${ca_cert}" ]]; then
-            ca_cert="/tmp/git-ca.crt"
-            echo "${{ secrets.CA_CERT }}" > "${ca_cert}"
+            echo "Setting CA Cert"
+            ca_cert="${CA_CERT}"
           fi
-          echo "Ca cert: ${ca_cert}"
           echo "::set-output name=ca-cert::$ca_cert"
           
 
@@ -93,7 +93,7 @@ jobs:
           TF_VAR_git_org: ${{ steps.variables.outputs.org }}
           TF_VAR_git_repo: ${{ steps.variables.outputs.repo }}
           TF_VAR_git_project: ${{ steps.variables.outputs.project }}
-          TF_VAR_ca_cert_file: ${{ steps.variables.outputs.ca-cert }}
+          TF_VAR_ca_cert: ${{ steps.variables.outputs.ca-cert }}
 
       - name: Verify destroy on ${{ matrix.testcase }}
         uses: cloud-native-toolkit/action-module-verify-destroy@main
@@ -107,4 +107,4 @@ jobs:
           TF_VAR_git_org: ${{ steps.variables.outputs.org }}
           TF_VAR_git_repo: ${{ steps.variables.outputs.repo }}
           TF_VAR_git_project: ${{ steps.variables.outputs.project }}
-          TF_VAR_ca_cert_file: ${{ steps.variables.outputs.ca-cert }}
+          TF_VAR_ca_cert: ${{ steps.variables.outputs.ca-cert }}

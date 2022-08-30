@@ -9,6 +9,7 @@ module "gitrepo" {
   project = var.git_project
   strict = true
   ca_cert_file = var.ca_cert_file
+  ca_cert = var.ca_cert
 }
 
 resource local_file git_output {
