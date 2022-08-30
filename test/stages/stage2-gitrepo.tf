@@ -8,7 +8,6 @@ module "gitrepo" {
   token = var.git_token
   project = var.git_project
   strict = true
-  debug = true
   ca_cert_file = var.ca_cert_file
 }
 

@@ -71,8 +71,39 @@ resource null_resource repo {
   }
 }
 
-data external repo_info {
+resource null_resource repo_init {
   depends_on = [null_resource.repo]
+
+  triggers = {
+    HOST  = var.host
+    ORG   = local.org
+    REPO  = var.repo
+    USERNAME = var.username
+    TOKEN = var.token
+    BIN_DIR = module.setup_clis.bin_dir
+    MODULE_ID = random_id.module_uuid.id
+    GIT_PROJECT = var.project
+    TMP_DIR = local.tmp_dir
+    DEBUG = var.debug
+    CA_CERT = data.external.ca_cert.result.ca_cert_file
+  }
+
+  provisioner "local-exec" {
+    command = "${path.module}/scripts/initialize-repo.sh '${self.triggers.HOST}' '${self.triggers.ORG}' '${self.triggers.REPO}' '${self.triggers.MODULE_ID}'"
+
+    environment = {
+      GIT_PROJECT = self.triggers.GIT_PROJECT
+      GIT_USERNAME = self.triggers.USERNAME
+      GIT_TOKEN = nonsensitive(self.triggers.TOKEN)
+      GIT_CA_CERT = self.triggers.CA_CERT
+      BIN_DIR = self.triggers.BIN_DIR
+      TMP_DIR = self.triggers.TMP_DIR
+    }
+  }
+}
+
+data external repo_info {
+  depends_on = [null_resource.repo_init]
 
   program = ["bash", "${path.module}/scripts/get-repo-url.sh"]
 

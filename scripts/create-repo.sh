@@ -83,12 +83,9 @@ else
   fi
   gitu create "${REPO}" -h "${GIT_HOST}" -o "${ORG}" --public="${PUBLIC}" --autoInit="true" ${DEBUG_FLAG}
 
-  if gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" ${DEBUG_FLAG} 1> /dev/null; then
-    REPO_URL=$(gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" --output json | jq -r '.http_url // empty')
-  else
+  if ! gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" ${DEBUG_FLAG} 1> /dev/null; then
     exit 1
   fi
 
-  echo "Initializing repo: ${REPO_URL}"
-  "${SCRIPT_DIR}/initialize-repo.sh" "${REPO_URL}" "${MODULE_ID}"
+  echo "true" > "${TMP_DIR}/initialize.out"
 fi

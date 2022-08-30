@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
-REPO_URL="$1"
-MODULE_ID="$2"
+GIT_HOST="$1"
+ORG="$2"
+REPO="$3"
+MODULE_ID="$4"
 
 set -e
 
-if [[ -z "${REPO_URL}" ]]; then
-  echo "Usage: initialize-repo.sh HOSTNAME ORG REPO"
+if [[ -z "${GIT_HOST}" ]] || [[ -z "${ORG}" ]] || [[ -z "${REPO}" ]] || [[ -z "${MODULE_ID}" ]]; then
+  echo "Usage: initialize-repo.sh HOSTNAME ORG REPO MODULE_ID"
   exit 1
 fi
 
@@ -25,9 +27,22 @@ if ! command -v gitu 1> /dev/null 2> /dev/null; then
   exit 1
 fi
 
+if ! command -v jq 1> /dev/null 2> /dev/null; then
+  echo "jq cli not found" >&2
+  exit 1
+fi
+
 if [[ -z "${TMP_DIR}" ]]; then
   TMP_DIR=".tmp/git-repo"
 fi
+mkdir -p "${TMP_DIR}"
+
+if [[ ! -f "${TMP_DIR}/initialize.out" ]] || [[ $(cat "${TMP_DIR}/initialize.out") != "true" ]]; then
+  echo "Skipping repo initialization"
+  exit 0
+fi
+
+REPO_URL=$(gitu exists "${REPO}" -h "${GIT_HOST}" -o "${ORG}" --output json | jq -r '.http_url // empty')
 
 REPO_DIR="${TMP_DIR}/repo-${MODULE_ID}"
 START_DIR="${PWD}"
@@ -45,7 +60,7 @@ else
   echo ""
 fi
 
-gitu clone "${REPO_URL}" "${REPO_DIR}" --configName "Cloud-Native Toolkit" --configEmail "cloudnativetoolkit@gmail.com" || exit 1
+gitu clone "${REPO_URL}" "${REPO_DIR}" --configName "Cloud-Native Toolkit" --configEmail "cloudnativetoolkit@gmail.com" --debug || exit 1
 
 cd "${REPO_DIR}" || exit 1
 
