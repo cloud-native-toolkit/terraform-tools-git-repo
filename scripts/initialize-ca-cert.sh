@@ -17,6 +17,7 @@ fi
 
 if [[ -n "${CA_CERT}" ]]; then
   if [[ -z "${CA_CERT_FILE}" ]]; then
+    mkdir -p "${TMP_DIR}"
     CA_CERT_FILE="${TMP_DIR}/git-ca.crt"
   fi
 
