@@ -58,6 +58,7 @@ echo "Initializing repo - ${REPO_URL}"
 
 if [[ -n "${GIT_CA_CERT}" ]]; then
   echo "  CA Cert provided"
+  cat "${GIT_CA_CERT}"
   echo ""
 else
   echo "  CA Cert not provided"
