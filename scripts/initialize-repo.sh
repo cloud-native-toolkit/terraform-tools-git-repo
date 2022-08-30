@@ -22,6 +22,10 @@ if [[ -z "${GIT_TOKEN}" ]]; then
   exit 1
 fi
 
+if [[ -n "${BIN_DIR}" ]]; then
+  export PATH="${BIN_DIR}:${PATH}"
+fi
+
 if ! command -v gitu 1> /dev/null 2> /dev/null; then
   echo "gitu cli not found" >&2
   exit 1
